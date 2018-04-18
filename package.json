@@ -1,0 +1,15 @@
+{
+  "name": "mrkeebs",
+  "version": "0.1.0",
+  "description": "A Discord bot for allowing people to vote on a contest",
+  "main": "index.js",
+  "author": "Felipe Coury <felipe.coury@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.2",
+    "discord.js": "11.3.0",
+    "dotenv": "5.0.0",
+    "request": "2.85.0",
+    "request-promise": "4.2.2"
+  }
+}
