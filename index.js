@@ -1,12 +1,13 @@
 const dotenv = require('dotenv');
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const moment = require('moment');
 
 const correios = require('./correios');
 
-dotenv.config();
+const client = new Discord.Client();
+const { calculateBusinessDays } = require('./utils');
 
-let mode = 'closed';
+dotenv.config();
 
 client.on('ready', () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -31,7 +32,20 @@ client.on('message', message => {
       const last = res[0];
       return message.channel.send(`Status de **${parts[1]}**\n\n${last.date} ${last.time} - ${last.location}\n**${last.status}**`);
     });
-    mode = 'open';
+  } else if (content && content.startsWith('k!40d')) {
+    const parts = content.split(' ');
+    if (parts.length < 2) {
+      return message.channel.send('Use k!40d <codigo-rastreio>');
+    }
+    correios.track(parts[1]).then(events => {
+      const event = events.find(e => e.status && e.status.indexOf('40d') > -1);
+      if (!event) {
+        return message.channel.send('Me parece que este rastreio não caiu nos 40 dias úteis');
+      }
+      const date = moment(`${event.date} ${event.time}`, 'DD/MM/YYYY kk:mm');
+      const businessDays = calculateBusinessDays(date, new Date());
+      message.channel.send(`Esse rastreio entrou nos 40 dias úteis dia ${event.date}. Ele está parado há ${businessDays} dias úteis.`);
+    });
   }
 });
 
