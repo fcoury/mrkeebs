@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const commandMap = {};
+const prefix = 'k!';
 
 class Command {
   constructor(message) {
@@ -16,13 +17,11 @@ class Command {
     // command data
     this.command = content && parts[0];
     this.params = parts.slice(1);
+
+    console.log('Message', content, '->', this.command, this.params);
   }
 
-  match() {
-    return this.command === `${this.prefix}${this.keyword}`;
-  }
-
-  send(message) {
+  reply(message) {
     this.channel.send(message);
   }
 }
@@ -40,7 +39,7 @@ Command.initialize = () => {
   })
   .forEach(file => {
     const CommandClass = require(`./${file}`);
-    commandMap[CommandClass.keyword] = CommandClass;
+    commandMap[`${prefix}${CommandClass.keyword}`] = CommandClass;
   });
 };
 
