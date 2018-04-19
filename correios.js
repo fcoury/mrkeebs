@@ -11,7 +11,6 @@ class Correios {
   }
 
   request(id) {
-    console.log('id', id);
     return rp({
       method: 'POST',
       uri: 'http://www2.correios.com.br/sistemas/rastreamento/newprint.cfm',
