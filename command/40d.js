@@ -10,9 +10,15 @@ class Cmd40d extends Command {
   }
 
   run() {
-    correios.track(this.params[1]).then(events => {
-      if (!res.length) {
-        return this.reply(`Código de rastreio ${parts[1]} não encontrado.`);
+    const code = this.params[0];
+
+    if (!code) {
+      return this.reply('Use k!track <codigo-rastreio>');
+    }
+
+    correios.track(code).then(events => {
+      if (!events.length) {
+        return this.reply(`Código de rastreio ${code} não encontrado.`);
       }
       const event = events.find(e => e.status && e.status.indexOf('40d') > -1);
       if (!event) {

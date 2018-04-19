@@ -12,11 +12,12 @@ class Track extends Command {
   }
 
   run() {
-    if (this.params.length < 1) {
+    const code = this.params[0];
+
+    if (!code) {
       return this.reply('Use k!track <codigo-rastreio>');
     }
 
-    const code = this.params[0];
     correios.track(code).then(res => {
       if (!res.length) {
         return this.reply(`Código de rastreio ${code} não encontrado.`);
